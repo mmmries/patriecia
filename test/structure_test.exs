@@ -41,4 +41,17 @@ defmodule StructureTest do
              ?z => %{part: "zoo", values: MapSet.new([2])}
            }
   end
+
+  test "adding a node with a prefix of an existing key" do
+    trie = 
+      Patriecia.new()
+      |> Patriecia.add("key", 1)
+      |> Patriecia.add("ke", 2)
+
+    assert trie.root == %{
+      :part => "ke",
+      :values => MapSet.new([2]),
+      ?y => %{part: "y", values: MapSet.new([1])}
+    }
+  end
 end

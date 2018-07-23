@@ -63,6 +63,10 @@ defmodule Patriecia do
     end)
   end
 
+  defp add_child(%{part: part} = node, part, record) do
+    Map.put(node, :values, MapSet.put(node.values, record))
+  end
+
   defp add_child(%{part: part} = node, key, record) do
     part_size = byte_size(part)
     rest = :binary.part(key, {part_size, byte_size(key) - part_size})
