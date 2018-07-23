@@ -1,6 +1,5 @@
-defmodule PatrieciaTest do
-  use ExUnit.Case
-  doctest Patriecia
+defmodule StructureTest do
+  use ExUnit.Case, async: true
 
   test "an empty trie" do
     assert Patriecia.new() |> Map.get(:root) == nil
