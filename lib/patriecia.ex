@@ -8,6 +8,10 @@ defmodule Patriecia do
     %{trie | root: root}
   end
 
+  def key(%__MODULE__{root: root}, key) do
+    do_key(root, key)
+  end
+
   def prefixed(%__MODULE__{root: root}, prefix) do
     do_prefixed(root, prefix, MapSet.new())
   end
@@ -31,6 +35,22 @@ defmodule Patriecia do
         %{part: shared_part, values: MapSet.new()}
         |> re_add_child(part, node.values)
         |> add_child(key, record)
+    end
+  end
+
+  defp do_key(nil, _prefix), do: MapSet.new()
+
+  defp do_key(%{part: part, values: values}, part), do: values
+
+  defp do_key(%{part: part} = node, key) do
+    cond do
+      String.starts_with?(key, part) ->
+        part_size = byte_size(part)
+        rest = :binary.part(key, part_size, byte_size(key) - part_size)
+        <<next, _::binary>> = rest
+        do_key(Map.get(node, next), rest)
+      true ->
+        MapSet.new()
     end
   end
 
