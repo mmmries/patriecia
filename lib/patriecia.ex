@@ -33,7 +33,7 @@ defmodule Patriecia do
         shared_part = find_shared_part(part, key)
 
         %{part: shared_part, values: MapSet.new()}
-        |> re_add_child(part, node.values)
+        |> re_add_child(node)
         |> add_child(key, record)
     end
   end
@@ -94,11 +94,12 @@ defmodule Patriecia do
     Map.put(node, next, do_add(Map.get(node, next), rest, record))
   end
 
-  defp re_add_child(%{part: part} = node, key, records) do
+  defp re_add_child(%{part: part} = node, %{part: child_part} = child) do
     part_size = byte_size(part)
-    rest = :binary.part(key, {part_size, byte_size(key) - part_size})
+    child_part_size = byte_size(child_part)
+    rest = :binary.part(child_part, {part_size, child_part_size - part_size})
     <<next, _::binary>> = rest
-    Map.put(node, next, %{part: rest, values: records})
+    Map.put(node, next, Map.put(child, :part, rest))
   end
 
   defp find_shared_part(bin1, bin2) do

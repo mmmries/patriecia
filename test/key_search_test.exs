@@ -7,6 +7,7 @@ defmodule KeySearchTest do
       |> Patriecia.add("apple", 1)
       |> Patriecia.add("apricot", 2)
       |> Patriecia.add("apple", 3)
+      |> Patriecia.add("lime", 4)
 
     {:ok, %{trie: trie}}
   end
