@@ -60,15 +60,18 @@ defmodule Patriecia do
     do_gather_results(node, results)
   end
 
-  defp do_prefixed(%{part: part} = node, prefix, results) do
+  defp do_prefixed(%{part: part} = node, query, results) do
+    part_size = byte_size(part)
+    query_size = byte_size(query)
+    shared_prefix_size = :binary.longest_common_prefix([part, query])
     cond do
-      String.starts_with?(prefix, part) ->
-        part_size = byte_size(part)
-        rest = :binary.part(prefix, part_size, byte_size(prefix) - part_size)
+      shared_prefix_size == part_size ->
+        rest = :binary.part(query, part_size, byte_size(query) - part_size)
         <<next, _::binary>> = rest
         do_prefixed(Map.get(node, next), rest, results)
-
-      String.starts_with?(part, prefix) ->
+      shared_prefix_size < query_size ->
+        results
+      true ->
         do_gather_results(node, results)
     end
   end
