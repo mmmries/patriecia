@@ -21,7 +21,8 @@ defmodule Patriecia.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:propcheck, "~> 1.1"},
+      {:benchee, "~> 0.14", only: [:test, :dev]},
+      {:propcheck, "~> 1.1", only: [:test]},
     ]
   end
 end
